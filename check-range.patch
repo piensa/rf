@@ -1,0 +1,32 @@
+diff --git a/snap-core.cabal b/snap-core.cabal
+index 3188e87..ac3fe53 100644
+--- a/snap-core.cabal
++++ b/snap-core.cabal
+@@ -112,6 +112,7 @@ Library
+     Snap.Internal.Debug,
+     Snap.Internal.Http.Types,
+     Snap.Internal.Parsing,
++    Snap.Internal.Util.FileServe
+     Snap.Test,
+     Snap.Types.Headers,
+     Snap.Util.CORS,
+@@ -125,7 +126,6 @@ Library
+     Snap.Internal.Routing,
+     Snap.Internal.Test.RequestBuilder,
+     Snap.Internal.Test.Assertions,
+-    Snap.Internal.Util.FileServe,
+     Snap.Internal.Util.FileUploads
+ 
+ 
+diff --git a/src/Snap/Internal/Util/FileServe.hs b/src/Snap/Internal/Util/FileServe.hs
+index 447223c..fef6bcd 100644
+--- a/src/Snap/Internal/Util/FileServe.hs
++++ b/src/Snap/Internal/Util/FileServe.hs
+@@ -24,6 +24,7 @@ module Snap.Internal.Util.FileServe
+   , serveFileAs
+     -- * Internal functions
+   , decodeFilePath
++  , checkRangeReq
+   ) where
+ 
+ ------------------------------------------------------------------------------
