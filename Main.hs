@@ -14,72 +14,64 @@
 {-# LANGUAGE TypeFamilies #-}
 module Main where
 
-import Control.Monad
+import qualified Control.Monad
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 
-import Data.Text (Text)
-import Data.Functor.Identity
+import Data.Functor.Identity (Identity)
+
 
 import Obelisk.Route
-import Obelisk.Route.TH
 
-import Obelisk.Frontend
-import Obelisk.Backend
+import qualified Obelisk.Frontend as O
+import qualified Obelisk.Backend as O
+import qualified Obelisk.Route as O
+import qualified Obelisk.Route.TH as O
+import qualified Obelisk.Run as O
 
-import Obelisk.Configs
-import Obelisk.Route
-
-import Reflex.Dom.Core
-
-import Obelisk.Run (run, runServeAsset)
-
+import Reflex.Dom.Core (el, text)
 
 
 data BackendRoute :: * -> * where
-  -- | Used to handle unparseable routes.
   BackendRoute_Missing :: BackendRoute ()
-  -- You can define any routes that will be handled specially by the backend here.
-  -- i.e. These do not serve the frontend, but do something different, such as serving static files.
 
 data FrontendRoute :: * -> * where
   FrontendRoute_Main :: FrontendRoute ()
-  -- This type is used to define frontend routes, i.e. ones for which the backend will serve the frontend.
 
 fullRouteEncoder
-  :: Encoder (Either Text) Identity (R (FullRoute BackendRoute FrontendRoute)) PageName
-fullRouteEncoder = mkFullRouteEncoder
-  (FullRoute_Backend BackendRoute_Missing :/ ())
+  :: O.Encoder (Either T.Text) Identity (O.R (O.FullRoute BackendRoute FrontendRoute)) O.PageName
+fullRouteEncoder = O.mkFullRouteEncoder
+  (O.FullRoute_Backend BackendRoute_Missing :/ ())
   (\case
-      BackendRoute_Missing -> PathSegment "missing" $ unitEncoder mempty)
+      BackendRoute_Missing -> O.PathSegment "missing" $ O.unitEncoder mempty)
   (\case
-      FrontendRoute_Main -> PathEnd $ unitEncoder mempty)
+      FrontendRoute_Main -> O.PathEnd $ O.unitEncoder mempty)
 
-concat <$> mapM deriveRouteComponent
+concat <$> mapM O.deriveRouteComponent
   [ ''BackendRoute
   , ''FrontendRoute
   ]
 
 commonStuff :: String
-commonStuff = "Here is a string defined in Common.Api"
+commonStuff = "Here is a string"
 
-frontend :: Frontend (R FrontendRoute)
-frontend = Frontend
-  { _frontend_head = do
-      el "title" $ text "Obelisk Ariel Entonces Minimal Example"
-  , _frontend_body = do
-      el "h1" $ text "Ariel Maurico hola que me cuentas dimelo y entonces? aja y ahora? Obelisk!"
+frontend :: O.Frontend (O.R FrontendRoute)
+frontend = O.Frontend
+  { O._frontend_head = do
+      el "title" $ text "Obelisk Minimal Example"
+  , O._frontend_body = do
+      el "h1" $ text "Obelisk!"
       el "p" $ text $ T.pack commonStuff
 
       el "div" $ do
       return ()
   }
 
-backend :: Backend BackendRoute FrontendRoute
-backend = Backend
-  { _backend_run = \serve -> serve $ const $ return ()
-  , _backend_routeEncoder = fullRouteEncoder
+backend :: O.Backend BackendRoute FrontendRoute
+backend = O.Backend
+  { O._backend_run = \serve -> serve $ const $ return ()
+  , O._backend_routeEncoder = fullRouteEncoder
   }
 
 
-main = run 8001 (runServeAsset "static")  backend frontend
+main = O.run 8001 (O.runServeAsset "static")  backend frontend

@@ -28,7 +28,7 @@
             universe
             universe-dependent-sum
           ];
-          ghc = pkgs.haskellPackages.ghcWithPackages haskellDeps;
+          ghc = pkgs.haskellPackages.ghcWithHoogle haskellDeps;
        in 
        stdenv.mkDerivation {
           name = "rf";
