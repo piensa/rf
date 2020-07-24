@@ -22,7 +22,7 @@ import Route
 frontend :: Frontend (R FrontendRoute)
 frontend = Frontend
   { _frontend_head = do
-      el "title" $ text "Obelisk Minimal Example"
+      el "title" $ text "Obelisk Ariel Entonces Minimal Example"
   , _frontend_body = do
       el "h1" $ text "Welcome to Obelisk!"
       el "p" $ text $ T.pack commonStuff
