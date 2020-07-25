@@ -12,21 +12,20 @@
 {-# LANGUAGE RankNTypes #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE PatternSynonyms #-}
 module Main where
 
 import qualified Control.Monad
 import qualified Data.Text as T
 import qualified Data.Text.Encoding as T
 
-
-{- This is needed for :/ but I do not know how to do it qualified -}
-import Obelisk.Route
-
 import qualified Obelisk.Frontend as O
 import qualified Obelisk.Backend as O
 import qualified Obelisk.Route as O
 import qualified Obelisk.Route.TH as O
 import qualified Obelisk.Run as O
+
+import Obelisk.Route ( pattern (:/) )
 
 import Reflex.Dom.Core (el, text)
 import Data.Functor.Identity (Identity)
